@@ -326,4 +326,25 @@ fmt.Println(<-a)
 
 ```
 </td></tr>
-</table>
+</table> 
+
+### Closing Channels
+
+A `Chan` can be closed. In Swift, the (LHS) `<-` operator returns `T?` because a channel read will return `nil` when the channel is closed. If you try to write to a closed channel, a `fatalError` will be thrown. 
+
+Because of Swift's optional semantics and strict type system, it is not always convenient to have to unwrap an optional every time you read a channel. To solve this you can use `OpenChan`. 
+
+### OpenChan
+
+Unlike `Chan`, `OpenChan` cannot be closed - it is always open. As a result `<-` will return a `T`. This has some other side effects however: 
+
+- If reading using the `Sequence` protocol, `next() -> T?` will never return `nil` and thus your loop will never terminate. 
+- There is no way to break a blocking channel read without writing to the channel. 
+
+#### Usage
+
+```swift 
+let c = OpenChan<String>()
+c <- "hi"
+let result: String = <-c // Not an optional
+```
