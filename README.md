@@ -374,6 +374,17 @@ A `Chan` can be closed. In Swift, the (LHS) `<-` operator returns `T?` because a
 
 Because of Swift's optional semantics and strict type system, it is not always convenient to have to unwrap an optional every time you read a channel. To solve this you can use `OpenChan`. 
 
+Alternatively you can simply unwrap the channel read:
+
+```swift
+let a = Chan<String>(buffer: 1)
+a <- "hi"
+
+if let val = <-a {
+    print(val)
+}
+```
+
 ### OpenChan
 
 Unlike `Chan`, `OpenChan` cannot be closed - it is always open. As a result `<-` will return a `T`. This has some other side effects however: 
