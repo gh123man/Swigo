@@ -58,7 +58,7 @@ This repo is an experimental library to bring go-style concurrency primitives to
 
 ## Usage
 
-1. Add `https://github.com/gh123man/Swigo` as a swift package dependency to your project. 
+1. Add `https://github.com/gh123man/Swigo` as a Swift package dependency to your project. 
 2. `import Swigo` and have fun!
 
 ## Documentation 
@@ -118,7 +118,7 @@ close(msg)
 
 ### Buffered Channels
 
-Swigo Channels can be buffered or unbuffered
+Channels in Swift can be buffered or unbuffered
 
 
 <table>
@@ -165,7 +165,7 @@ fmt.Println(sum)
 </td></tr>
 </table>
 
-Also `map`, `reduce`, etc work on Swigo channels too thanks to `Sequence`!
+Also `map`, `reduce`, etc work on channels in Swift too thanks to `Sequence`!
 
 
 ### Select 
@@ -223,7 +223,7 @@ Swift has reserve words for `case` and `default` and the operator support is not
 
 </table>
 
-**Gotcha:** You cannot `return` from `none` to break an oter loop in Swift since it's inside a closure. To break a loop surrounding a `select`, you must explicitly set some control variable (ex: `while !done` and `done = true`)
+**Gotcha:** You cannot `return` from `none` to break an outer loop in Swift since it's inside a closure. To break a loop surrounding a `select`, you must explicitly set some control variable (ex: `while !done` and `done = true`)
 
 #### Examples
 
@@ -344,15 +344,17 @@ select {
 case <-a:
 default:
     fmt.Println("Default case!")
-}
 
+}
 ```
 </td></tr>
 </table> 
 
 ### Closing Channels
 
-A `Chan` can be closed. In Swift, the (LHS) `<-` operator returns `T?` because a channel read will return `nil` when the channel is closed. If you try to write to a closed channel, a `fatalError` will be thrown. 
+A `Chan` can be closed. In Swift, the channel receive (`<-`) operator returns `T?` because a channel read will return `nil` when the channel is closed. If you try to write to a closed channel, a `fatalError` will be thrown. 
+
+It's worth noting that this is somewhat different than how go deals with receiving on a closed channel. When a channel is closed you you need 1. a way to detect that the channel is closed and 2. something to return in place of the expected value. Swift does not have the notion of [zero values](https://go.dev/tour/basics/12) so we need an alternate solution. Returning `T?` allows us to do both. 
 
 Because of Swift's optional semantics and strict type system, it is not always convenient to have to unwrap an optional every time you read a channel. To solve this you can use `OpenChan`. 
 
@@ -369,9 +371,9 @@ if let val = <-a {
 
 ### OpenChan
 
-Unlike `Chan`, `OpenChan` cannot be closed - it is always open. As a result `<-` will return a `T`. This has some other side effects however: 
+Unlike `Chan`, `OpenChan` cannot be closed - it is always open. As a result `<-` will return a non-optional `T`. This has some other side effects however: 
 
-- If reading using the `Sequence` protocol, `next() -> T?` will never return `nil` and thus your loop will never terminate. 
+- If reading using the `Sequence` protocol, `next() -> T?` will never return `nil` and thus your loop will never terminate (without an explicit break or return).
 - There is no way to break a blocking channel read without writing to the channel. 
 
 #### Usage
