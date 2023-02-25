@@ -54,14 +54,20 @@ go func() {
 
 ## About
 
-This repo is an experimental library to bring go-style concurrency primitives to Swift. The goal is to bring as close to 1:1 API support in Swift. Do not expect comparabile performance or reliability. Swift does not have a runtime similar to go, and thus "goroutines" are just OS threads managed by GCD's global queue. 
+This repo is an experimental library to bring go style concurrency primitives to Swift. The objective is to bring nearly 1:1 API and behavior support to Swift. Do not expect comparabile performance or reliability. Swift does not have a runtime similar to go, and thus "goroutines" are just OS threads managed by GCD's global queue. 
+
+
+### Supported on: 
+- macOS
+- iOS
+- Linux
 
 ## Usage
 
 1. Add `https://github.com/gh123man/Swigo` as a Swift package dependency to your project. 
-2. `import Swigo` and have fun!
+2. `import Swigo` and go!
 
-## Documentation 
+## Documentation & Examples
 
 ### Range over chan
 
