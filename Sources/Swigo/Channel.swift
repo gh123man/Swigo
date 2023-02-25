@@ -29,11 +29,11 @@ public class Chan<T> {
         self.inner = ChanInternal<T>(buffer: buffer)
     }
     
-    public func receiveOrListen(_ sema: DispatchSemaphore) -> T? {
+    func receiveOrListen(_ sema: DispatchSemaphore) -> T? {
         return inner.receiveOrListen(sema)
     }
     
-    public func sendOrListen(_ sema: DispatchSemaphore, value: T) -> Bool {
+    func sendOrListen(_ sema: DispatchSemaphore, value: T) -> Bool {
         return inner.sendOrListen(sema, value: value)
     }
     
@@ -69,11 +69,11 @@ public class OpenChan<T> {
         self.inner = ChanInternal<T>(buffer: buffer)
     }
     
-    public func receiveOrListen(_ sema: DispatchSemaphore) -> T? {
+    func receiveOrListen(_ sema: DispatchSemaphore) -> T? {
         return inner.receiveOrListen(sema)
     }
     
-    public func sendOrListen(_ sema: DispatchSemaphore, value: T) -> Bool {
+    func sendOrListen(_ sema: DispatchSemaphore, value: T) -> Bool {
         return inner.sendOrListen(sema, value: value)
     }
     
