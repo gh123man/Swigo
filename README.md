@@ -19,6 +19,7 @@ let done = Chan<Bool>()
 msg <- "Swift"
 msg <- "❤️"
 msg <- "Go"
+msg.close()
 
 go {
     for message in msg {
@@ -38,6 +39,7 @@ done := make(chan bool)
 msg <- "Swift"
 msg <- "❤️"
 msg <- "Go"
+close(msg)
 
 go func() {
     for message := range msg {
