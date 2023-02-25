@@ -13,59 +13,39 @@ Go concurrency primitives for Swift.
 <tr><td> 
 
 ```swift
-let msg = Chan<String>()
+let msg = Chan<String>(buffer: 3)
 let done = Chan<Bool>()
-let exit = Chan<Bool>()
-
-go {
-    var isDone = false
-    while !isDone {
-        select {
-            rx(msg) { message in
-                print(message!)
-            }
-            rx(done) {
-                isDone = true
-                exit <- true
-            }
-        }
-    }
-}
 
 msg <- "Swift"
 msg <- "❤️"
 msg <- "Go"
-done.close()
-<-exit
+
+go {
+    for message in msg {
+        print(message)
+    }
+    done <- true
+}
+<-done
 ```
 </td><td>
 
 
 ```go
-msg := make(chan string)
+msg := make(chan string, 3)
 done := make(chan bool)
-exit := make(chan bool)
-
-go func() {
-
-    for {
-        select {
-        case message := <-msg:
-            fmt.Println(message)
-
-        case <-done:
-            exit <- true
-            return
-
-        }
-    }
-}()
 
 msg <- "Swift"
 msg <- "❤️"
 msg <- "Go"
-close(done)
-<-exit
+
+go func() {
+    for message := range msg {
+        fmt.Println(message)
+    }
+    done <- true
+}()
+<-done
 ```
 </td></tr>
 </table>
