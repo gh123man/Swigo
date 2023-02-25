@@ -259,20 +259,25 @@ Example
 </th>
 </tr>
 
+
 <tr>
 <td> 
 
-`default`
+
+`chan receive`
 </td>
 <td> 
 
 ```swift
-let a = Chan<Bool>()
+let a = Chan<String>(buffer: 1)
+a <- "foo"
 
 select {
-    rx(a)
+    rx(a) {
+        print($0!) 
+    }
     none {
-        print("Default case!")
+        print("Not called")
     }
 }
 ```
@@ -280,14 +285,17 @@ select {
 
 
 ```go
-a := make(chan bool)
+a := make(chan string, 1)
+a <- "foo"
 
 select {
-case <-a:
-default:
-    fmt.Println("Default case!")
-}
+case av := <-a:
+    fmt.Println(av)
 
+default:
+    fmt.Println("Not called")
+
+}
 ```
 </td></tr>
 
@@ -323,6 +331,38 @@ default:
 }
 
 fmt.Println(<-a)
+
+```
+</td></tr>
+
+<tr>
+<td> 
+
+`default`
+</td>
+<td> 
+
+```swift
+let a = Chan<Bool>()
+
+select {
+    rx(a)
+    none {
+        print("Default case!")
+    }
+}
+```
+</td><td>
+
+
+```go
+a := make(chan bool)
+
+select {
+case <-a:
+default:
+    fmt.Println("Default case!")
+}
 
 ```
 </td></tr>
