@@ -261,8 +261,8 @@ let a = Chan<String>(buffer: 1)
 a <- "foo"
 
 select {
-    rx(a) {
-        print($0!) 
+    rx(a) { av in
+        print(av!) 
     }
     none {
         print("Not called")
@@ -385,7 +385,7 @@ Unlike `Chan`, `OpenChan` cannot be closed - it is always open. As a result `<-`
 #### Usage
 
 ```swift 
-let c = OpenChan<String>()
+let c = OpenChan<String>(buffer: 1)
 c <- "hi"
 let result: String = <-c // Not an optional
 ```
