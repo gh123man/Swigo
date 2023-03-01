@@ -334,6 +334,43 @@ final class SwigoTests: XCTestCase {
         <-done
         
         XCTAssertEqual(count, 3)
+    }
+    
+    func testCloseNotify() {
+        let a = Chan<Bool>()
+        let done = Chan<Bool>()
         
+        go {
+            print("wait 1")
+            <-a
+            done <- true
+        }
+        go {
+            print("wait 2")
+            <-a
+            done <- true
+        }
+        go {
+            print("wait 3")
+            <-a
+            done <- true
+        }
+
+        <-sleep(seconds: 0.1)
+        a.close()
+        
+        
+        <-done
+        <-done
+        <-done
+        print("Closed")
+    }
+    
+    func testReadClose() {
+        let a = Chan<Bool>()
+        a.close()
+        <-a
+        <-a
+        <-a
     }
 }

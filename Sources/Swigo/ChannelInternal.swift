@@ -23,9 +23,9 @@ class ChanInternal<T> {
     
     class Receiver<T> {
         private let sema = DispatchSemaphore(value: 0)
-        private var _value: T!
+        private var _value: T?
         
-        var value: T {
+        var value: T? {
             set {
                 _value = newValue
                 sema.signal()
@@ -147,6 +147,7 @@ class ChanInternal<T> {
         }
         
         if closed {
+            lock.unlock()
             return nil
         }
 
@@ -160,6 +161,10 @@ class ChanInternal<T> {
         lock.lock()
         defer { lock.unlock() }
         closed = true
+        
+        while let recvW = recvQ.popFirst() {
+            recvW.value = nil
+        }
     }
 }
 
